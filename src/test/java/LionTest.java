@@ -14,6 +14,7 @@ public class LionTest {
     private final String sex;
     private Lion lion;
     private Feline feline;
+    private static final String whenLionIsNull = "Гендерквир";
 
     @Before
     public void init() {
@@ -27,6 +28,7 @@ public class LionTest {
             this.lion = new Lion(sex, feline);
         } catch (Exception e) {
             this.lion = null;
+            assertEquals("Используйте допустимые значения пола животного - самей или самка", e.getMessage());
         }
     }
 
@@ -34,7 +36,8 @@ public class LionTest {
     public static Object[][] getData() {
         return new Object[][]{
                 {"Самец"},
-                {"Самка"}
+                {"Самка"},
+                {whenLionIsNull}
         };
     }
 
@@ -43,19 +46,28 @@ public class LionTest {
         int expectedKittens = 1;
         int actualKittens = 0;
 
-        Mockito.when(feline.getKittens()).thenReturn(expectedKittens);
-        actualKittens = lion.getKittens();
-        Mockito.verify(feline).getKittens();            // Проверим, что lion.getKittens() вызывает feline.getKittens()
-        assertEquals(expectedKittens, actualKittens);    // Проверим, что lion.getKittens() возвращает feline.getKittens()
+        try {
+            Mockito.when(feline.getKittens()).thenReturn(expectedKittens);
+            actualKittens = lion.getKittens();
+            Mockito.verify(feline).getKittens();            // Проверим, что lion.getKittens() вызывает feline.getKittens()
+            assertEquals(expectedKittens, actualKittens);    // Проверим, что lion.getKittens() возвращает feline.getKittens()
+        } catch (NullPointerException e) {
+            assertTrue(sex.equals(whenLionIsNull));
+        }
+
     }
 
     @Test
     public void doesHaveMane() {
-        boolean doesHaveMane = lion.doesHaveMane();
-        if (sex.equals("Самец"))
-            assertTrue(doesHaveMane);
-        if (sex.equals("Самка"))
-            assertFalse(doesHaveMane);
+        try {
+            boolean doesHaveMane = lion.doesHaveMane();
+            if (sex.equals("Самец"))
+                assertTrue(doesHaveMane);
+            if (sex.equals("Самка"))
+                assertFalse(doesHaveMane);
+        } catch (NullPointerException e) {
+            assertTrue(sex.equals(whenLionIsNull));
+        }
     }
 
     @Test
@@ -65,7 +77,7 @@ public class LionTest {
             assertEquals(lion.getFood(), List.of("Животные", "Птицы", "Рыба"));
             Mockito.verify(feline).getFood(Mockito.anyString());
         } catch (Exception e) {
-
+            assertTrue(sex.equals(whenLionIsNull));
         }
     }
 
