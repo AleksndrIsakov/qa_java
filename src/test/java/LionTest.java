@@ -6,67 +6,46 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import java.util.List;
 import static org.junit.Assert.*;
 
-@RunWith(Parameterized.class)
+@RunWith(MockitoJUnitRunner.class)
 public class LionTest {
-    private final String sex;
-    private Lion lion;
     private Feline feline;
 
     @Before
     public void init() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    public LionTest(String sex) {
-        this.sex = sex;
-        try {
-            this.feline = Mockito.mock(Feline.class);
-            this.lion = new Lion(sex, feline);
-        } catch (Exception e) {
-            this.lion = null;
-        }
-    }
-
-    @Parameterized.Parameters
-    public static Object[][] getData() {
-        return new Object[][]{
-                {"Самец"},
-                {"Самка"}
-        };
+        this.feline = Mockito.mock(Feline.class);
     }
 
     @Test
-    public void getKittens() {
-        int expectedKittens = 1;
-        int actualKittens = 0;
-
-        Mockito.when(feline.getKittens()).thenReturn(expectedKittens);
-        actualKittens = lion.getKittens();
-        Mockito.verify(feline).getKittens();            // Проверим, что lion.getKittens() вызывает feline.getKittens()
-        assertEquals(expectedKittens, actualKittens);    // Проверим, что lion.getKittens() возвращает feline.getKittens()
+    public void getKittens() throws Exception {
+        Lion lion = new Lion("Самка", feline);
+        Mockito.when(feline.getKittens()).thenReturn(1);
+        assertEquals(1, lion.getKittens());
+        Mockito.verify(feline).getKittens();
     }
 
     @Test
-    public void doesHaveMane() {
-        boolean doesHaveMane = lion.doesHaveMane();
-        if (sex.equals("Самец"))
-            assertTrue(doesHaveMane);
-        if (sex.equals("Самка"))
-            assertFalse(doesHaveMane);
+    public void doesHaveMane() throws Exception {
+        Lion lion = new Lion("Самец", feline);
+        assertTrue(lion.doesHaveMane());
     }
 
     @Test
-    public void getFood() {
-        try {
+    public void doesntHaveMane() throws Exception {
+        Lion lion = new Lion("Самка", feline);
+        assertFalse(lion.doesHaveMane());
+    }
+
+    @Test
+    public void getFood() throws Exception {
+            Lion lion = new Lion("Самец", feline);
             Mockito.when(feline.getFood("Хищник")).thenReturn(List.of("Животные", "Птицы", "Рыба"));
             assertEquals(lion.getFood(), List.of("Животные", "Птицы", "Рыба"));
             Mockito.verify(feline).getFood(Mockito.anyString());
-        } catch (Exception e) {
-
-        }
     }
 
 }
