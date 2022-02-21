@@ -30,8 +30,8 @@ public class LionTest {
 
     @Test
     public void doesHaveMane() throws Exception {
-            Lion lion = new Lion("Самец", feline);
-            assertTrue(lion.doesHaveMane());
+        Lion lion = new Lion("Самец", feline);
+        assertTrue(lion.doesHaveMane());
     }
 
     @Test
