@@ -20,13 +20,8 @@ public class AlexTest {
     Feline feline;
 
     @Before
-    public void init() {
-        try {
-            alexLion = new Alex(feline);
-        } catch (Exception e) {
-            assertNull(e);
-        }
-
+    public void init() throws Exception {
+        alexLion = new Alex(feline);
     }
 
     @Test

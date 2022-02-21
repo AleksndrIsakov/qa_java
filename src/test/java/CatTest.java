@@ -30,12 +30,8 @@ public class CatTest {
     }
 
     @Test
-    public void getFood() {
-        try {
+    public void getFood() throws Exception {
             Mockito.when(feline.eatMeat()).thenReturn(List.of("Животные", "Птицы", "Рыба"));
             assertEquals(List.of("Животные", "Птицы", "Рыба"),cat.getFood());
-        } catch (Exception e) {
-            assertNull(e);
-        }
     }
 }

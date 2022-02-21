@@ -39,12 +39,6 @@ public class AnimalTest {
                 expected = List.of("Трава", "Различные растения");
                 break;
         }
-
-        try {
-            assertEquals(expected, animal.getFood(animalType));
-        } catch (Exception e) {
-            assertEquals("Неизвестный вид животного, используйте значение Травоядное или Хищник", e.getMessage());
-        }
     }
 
     @Test
